@@ -1,0 +1,31 @@
+services:
+  dynamo-db:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+  server:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile-server
+    ports:
+      - 8080:8080
+    depends_on:
+      - dynamo-db
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: ./
+        target: /usr/src/app
+      - type: bind
+        source: ./docker-config.yml
+        target: /usr/config.yml
+    environment:
+      CONFIG_FILE: /usr/config.yml
+networks:
+  default:
+    name: pipelineapp

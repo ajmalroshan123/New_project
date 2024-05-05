@@ -1,0 +1,4 @@
+dynamodb:
+  aws_access_key_id: "DUMMYIDEXAMPLE"
+  aws_secret_access_key: "DUMMYEXAMPLEKEY"
+  region: "eu-west-1"
